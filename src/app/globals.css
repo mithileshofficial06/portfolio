@@ -1,0 +1,263 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Colors — dark mode only */
+  --color-bg: #232323;
+  --color-card: #2C2C2C;
+  --color-border: #3A3A3A;
+  --color-accent: #6D8196;
+  --color-text-primary: #FFFFE3;
+  --color-text-secondary: #CBCBCB;
+
+  /* Spacing tokens */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 32px;
+  --space-xl: 64px;
+
+  /* Radius tokens */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+}
+
+/* ─── Base ─── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  background-color: var(--color-bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Noise texture overlay ─── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── Custom scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg);
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: rgba(109, 129, 150, 0.3);
+  color: var(--color-text-primary);
+}
+
+/* ─── Cursor hiding (custom cursor replaces default) ─── */
+.cursor-none * {
+  cursor: none !important;
+}
+
+/* ─── Glitch effect for hero photo ─── */
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+    filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+    filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85)
+      drop-shadow(2px 0 rgba(255, 0, 0, 0.4))
+      drop-shadow(-2px 0 rgba(0, 255, 255, 0.4));
+  }
+  40% {
+    transform: translate(2px, -2px);
+    filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85)
+      drop-shadow(-2px 0 rgba(255, 0, 0, 0.4))
+      drop-shadow(2px 0 rgba(0, 255, 255, 0.4));
+  }
+  60% {
+    transform: translate(-1px, 1px);
+    filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85);
+  }
+  80% {
+    transform: translate(1px, -1px);
+    filter: sepia(0.6) hue-rotate(165deg) saturate(0.8) brightness(0.85)
+      drop-shadow(1px 0 rgba(255, 0, 0, 0.3));
+  }
+  100% {
+    transform: translate(0);
+    filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85);
+  }
+}
+
+.photo-duotone {
+  filter: sepia(0.6) hue-rotate(160deg) saturate(0.7) brightness(0.85);
+  transition: filter 0.3s ease;
+}
+
+.photo-glitch:hover {
+  animation: glitch 0.3s ease-in-out infinite;
+}
+
+/* ─── Section base ─── */
+section {
+  position: relative;
+  padding: 100px 0;
+}
+
+/* ─── Floating label styles ─── */
+.floating-label-group {
+  position: relative;
+}
+
+.floating-label-group input,
+.floating-label-group textarea {
+  width: 100%;
+  padding: 16px;
+  padding-top: 24px;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.floating-label-group input:focus,
+.floating-label-group textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.floating-label-group label {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-label-group textarea ~ label {
+  top: 24px;
+}
+
+.floating-label-group input:focus ~ label,
+.floating-label-group input:not(:placeholder-shown) ~ label,
+.floating-label-group textarea:focus ~ label,
+.floating-label-group textarea:not(:placeholder-shown) ~ label {
+  top: 8px;
+  transform: translateY(0) scale(0.85);
+  color: var(--color-accent);
+  font-size: 12px;
+}
+
+/* ─── In Dev badge pulse ─── */
+@keyframes ping-dot {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+.badge-in-dev .ping-dot {
+  animation: ping-dot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* ─── Timeline line draw ─── */
+.timeline-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+/* ─── Hero floating orb animations ─── */
+@property --rotation {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotate-border {
+  to {
+    --rotation: 360deg;
+  }
+}
+
+@keyframes float-orb-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -40px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% {
+    transform: translate(40px, 30px) scale(1.05);
+  }
+}
+
+@keyframes float-orb-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-40px, -30px) scale(1.08);
+  }
+  66% {
+    transform: translate(30px, 40px) scale(0.92);
+  }
+}
+
+@keyframes float-orb-3 {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-50px, -25px);
+  }
+}
