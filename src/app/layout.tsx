@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/ui/CustomCursor";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import NavDock from "@/components/ui/NavDock";
 import SmoothScroller from "@/components/layout/SmoothScroller";
@@ -110,9 +109,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="cursor-none">
+      <body>
         <SmoothScroller>
-          <CustomCursor />
           <ScrollProgress />
           {children}
           <NavDock />

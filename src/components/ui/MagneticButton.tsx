@@ -43,7 +43,6 @@ export default function MagneticButton({
         target={target}
         rel={rel}
         className={baseClasses}
-        data-hover
       >
         {children}
       </a>
@@ -56,7 +55,6 @@ export default function MagneticButton({
       onClick={onClick}
       type={type}
       className={baseClasses}
-      data-hover
     >
       {children}
     </button>

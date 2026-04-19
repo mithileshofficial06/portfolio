@@ -74,7 +74,6 @@ export default function NavDock() {
               transformOrigin: "bottom center",
             }}
             aria-label={item.label}
-            data-hover
           >
             <item.Icon
               size={20}

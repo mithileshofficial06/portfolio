@@ -121,7 +121,6 @@ export default function Contact() {
               <a
                 href={`mailto:${personalInfo.email}`}
                 className="group flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300"
-                data-hover
               >
                 <div className="p-2.5 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
                   <Mail size={18} className="text-accent" />
@@ -135,7 +134,6 @@ export default function Contact() {
               <a
                 href={`tel:${personalInfo.phone}`}
                 className="group flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300"
-                data-hover
               >
                 <div className="p-2.5 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
                   <Phone size={18} className="text-accent" />
@@ -166,7 +164,6 @@ export default function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group p-3 rounded-xl border border-border bg-card hover:border-accent hover:bg-accent/10 transition-all duration-300"
-                  data-hover
                   aria-label={link.name}
                 >
                   <span className="text-text-secondary group-hover:text-accent transition-colors duration-300">
@@ -222,7 +219,6 @@ export default function Contact() {
                 bg-accent text-bg hover:bg-accent/90 transition-all duration-300 flex items-center justify-center gap-2
                 disabled:opacity-50 disabled:cursor-not-allowed
                 hover:shadow-[0_0_24px_rgba(109,129,150,0.3)]"
-              data-hover
             >
               {formState === "idle" && (
                 <>

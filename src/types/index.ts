@@ -1,12 +1,14 @@
 export interface Project {
   id: number;
-  title: string;
-  techStack: string[];
-  category: string;
-  description: string;
-  github: string;
-  live: string;
+  name: string;
   badge?: "In Dev" | "Freelance" | "Full Stack" | "Social Impact" | "Cybersecurity" | "ML";
+  description: string;
+  stack: string[];
+  type: string;
+  status: string;
+  impact: string;
+  github: string | null;
+  live: string | null;
 }
 
 export interface Skill {

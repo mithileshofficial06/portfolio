@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import Typed from "typed.js";
-import Image from "next/image";
+import PhotoParticles from "@/components/ui/PhotoParticles";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { personalInfo } from "@/data/meta";
 import { Github, Linkedin, Download, Mail, ChevronDown } from "lucide-react";
@@ -20,9 +20,9 @@ export default function Hero() {
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const bioRef = useRef<HTMLParagraphElement>(null);
 
-  // ─── Dot grid background with mouse glow ───
+  // ─── Dot grid background with mouse glow + edge vignette ───
   useEffect(() => {
     const canvas = gridRef.current;
     if (!canvas) return;
@@ -42,7 +42,6 @@ export default function Hero() {
 
     const handleMouse = (e: MouseEvent) => {
       currentMouse = { x: e.clientX, y: e.clientY };
-      setMousePos({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener("mousemove", handleMouse);
 
@@ -52,15 +51,25 @@ export default function Hero() {
       const spacing = 30;
       const dotRadius = 1;
       const glowRadius = 200;
+      const cw = canvas.width;
+      const ch = canvas.height;
 
-      for (let x = 0; x < canvas.width; x += spacing) {
-        for (let y = 0; y < canvas.height; y += spacing) {
+      for (let x = 0; x < cw; x += spacing) {
+        for (let y = 0; y < ch; y += spacing) {
           const dist = Math.sqrt(
             (x - currentMouse.x) ** 2 + (y - currentMouse.y) ** 2
           );
           const proximity = Math.max(0, 1 - dist / glowRadius);
-          const alpha = 0.08 + proximity * 0.5;
+
+          // ── Edge vignette: fade dots near edges ──
+          const edgeFadeX = Math.min(x, cw - x) / (cw * 0.2);
+          const edgeFadeY = Math.min(y, ch - y) / (ch * 0.2);
+          const edgeFade = Math.min(1, edgeFadeX, edgeFadeY);
+
+          const alpha = (0.08 + proximity * 0.5) * edgeFade;
           const size = dotRadius + proximity * 2;
+
+          if (alpha < 0.005) continue; // skip invisible dots
 
           ctx.beginPath();
           ctx.arc(x, y, size, 0, Math.PI * 2);
@@ -81,7 +90,7 @@ export default function Hero() {
       gradient.addColorStop(0, "rgba(109, 129, 150, 0.06)");
       gradient.addColorStop(1, "rgba(109, 129, 150, 0)");
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, cw, ch);
 
       animId = requestAnimationFrame(draw);
     };
@@ -154,6 +163,14 @@ export default function Hero() {
         "-=0.2"
       );
 
+      // Bio line
+      tl.fromTo(
+        bioRef.current,
+        { y: 15, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        "-=0.2"
+      );
+
       // Photo scale + rotate in
       tl.fromTo(
         photoRef.current,
@@ -217,6 +234,45 @@ export default function Hero() {
     }, sectionRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // ─── Mouse-reactive parallax tilt on photo ───
+  useEffect(() => {
+    const section = sectionRef.current;
+    const photo = photoRef.current;
+    if (!section || !photo) return;
+
+    const handleMove = (e: MouseEvent) => {
+      const rect = section.getBoundingClientRect();
+      // -0.5 to 0.5 range
+      const nx = (e.clientX - rect.left) / rect.width - 0.5;
+      const ny = (e.clientY - rect.top) / rect.height - 0.5;
+
+      gsap.to(photo, {
+        rotateY: nx * 10,  // ±5°
+        rotateX: -ny * 10, // ±5°
+        duration: 0.6,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    };
+
+    const handleLeave = () => {
+      gsap.to(photo, {
+        rotateY: 0,
+        rotateX: 0,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.5)",
+      });
+    };
+
+    section.addEventListener("mousemove", handleMove);
+    section.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      section.removeEventListener("mousemove", handleMove);
+      section.removeEventListener("mouseleave", handleLeave);
+    };
   }, []);
 
   // ─── Typed.js tagline ───
@@ -347,6 +403,16 @@ export default function Hero() {
               />
             </div>
 
+            {/* Bio one-liner */}
+            <p
+              ref={bioRef}
+              className="text-text-secondary/80 text-sm md:text-base max-w-md leading-relaxed"
+              style={{ opacity: 0 }}
+            >
+              Building secure, intelligent web experiences — from AI-powered
+              agents to pixel-perfect interfaces.
+            </p>
+
             {/* CTAs */}
             <div ref={ctaRef} className="flex flex-wrap gap-4 pt-2">
               <MagneticButton
@@ -374,7 +440,6 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group p-2.5 rounded-lg border border-border bg-card/50 hover:border-accent hover:bg-accent/10 transition-all duration-300"
-                data-hover
               >
                 <Github
                   size={18}
@@ -386,7 +451,6 @@ export default function Hero() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group p-2.5 rounded-lg border border-border bg-card/50 hover:border-accent hover:bg-accent/10 transition-all duration-300"
-                data-hover
               >
                 <Linkedin
                   size={18}
@@ -396,7 +460,6 @@ export default function Hero() {
               <a
                 href={`mailto:${personalInfo.email}`}
                 className="group p-2.5 rounded-lg border border-border bg-card/50 hover:border-accent hover:bg-accent/10 transition-all duration-300"
-                data-hover
               >
                 <Mail
                   size={18}
@@ -406,54 +469,23 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* Right — Photo with rotating gradient border */}
+          {/* Right — Photo with parallax tilt */}
           <div className="flex justify-center lg:justify-end">
-            <div className="relative">
-              {/* Rotating gradient ring */}
-              <div
-                className="absolute -inset-[3px] rounded-2xl z-0"
-                style={{
-                  background:
-                    "conic-gradient(from var(--rotation, 0deg), #6D8196, transparent, #FFFFE3, transparent, #6D8196)",
-                  animation: "rotate-border 4s linear infinite",
-                  opacity: 0.6,
-                }}
+            <div
+              ref={photoRef}
+              id="hero-photo"
+              className="relative w-72 h-72 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] rounded-2xl border border-border/40"
+              style={{
+                opacity: 0,
+                perspective: "800px",
+                transformStyle: "preserve-3d",
+                boxShadow: "0 0 40px rgba(109, 129, 150, 0.15), 0 0 80px rgba(109, 129, 150, 0.05)",
+              }}
+            >
+              <PhotoParticles
+                imageSrc="/mithilesh.jpg"
+                className="w-full h-full rounded-2xl"
               />
-
-              {/* Outer glow */}
-              <div
-                className="absolute -inset-4 rounded-3xl z-0 blur-xl opacity-20"
-                style={{
-                  background:
-                    "radial-gradient(ellipse, #6D8196, transparent)",
-                }}
-              />
-
-              <div
-                ref={photoRef}
-                id="hero-photo"
-                className="relative w-72 h-72 md:w-80 md:h-80 lg:w-[360px] lg:h-[360px] rounded-2xl overflow-hidden photo-duotone photo-glitch z-10"
-                style={{ opacity: 0 }}
-              >
-                <Image
-                  src="/mithilesh.jpg"
-                  alt="Mithilesh KS"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 288px, 360px"
-                />
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-transparent to-transparent" />
-                {/* Subtle grain on photo */}
-                <div
-                  className="absolute inset-0 opacity-[0.08] mix-blend-overlay"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-                    backgroundSize: "128px 128px",
-                  }}
-                />
-              </div>
             </div>
           </div>
         </div>
