@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 120" fill="none">
+  <!-- Shadow/ground reflection -->
+  <ellipse cx="140" cy="112" rx="90" ry="5" fill="rgba(0,0,0,0.08)"/>
+  
+  <!-- Fuselage -->
+  <path d="M 8 58 C 18 48, 40 40, 70 38 L 220 38 C 240 38, 255 42, 265 48 L 268 56 L 265 64 C 255 70, 240 74, 220 74 L 70 74 C 40 72, 18 68, 8 58 Z" fill="#E8E4DC" stroke="#C8C4BC" stroke-width="0.5"/>
+  
+  <!-- Fuselage highlight stripe -->
+  <path d="M 30 52 L 240 52" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  
+  <!-- Belly stripe -->
+  <path d="M 60 70 L 230 70" stroke="#9BAAB8" stroke-width="1.5" opacity="0.3"/>
+  
+  <!-- Cockpit windshield -->
+  <path d="M 14 54 L 30 44 L 30 54 Z" fill="#7BA7CC" opacity="0.7"/>
+  <path d="M 14 62 L 30 68 L 30 62 Z" fill="#7BA7CC" opacity="0.6"/>
+  
+  <!-- Side windows -->
+  <g opacity="0.5">
+    <rect x="36" y="44" width="6" height="5" rx="1.5" fill="#7BA7CC"/>
+    <rect x="46" y="43" width="5" height="5" rx="1.5" fill="#7BA7CC"/>
+    <rect x="55" y="43" width="5" height="5" rx="1.5" fill="#7BA7CC"/>
+  </g>
+  
+  <!-- Passenger windows row -->
+  <g opacity="0.25" fill="#7BA7CC">
+    <circle cx="72" cy="45" r="1.3"/><circle cx="78" cy="45" r="1.3"/>
+    <circle cx="84" cy="45" r="1.3"/><circle cx="90" cy="45" r="1.3"/>
+    <circle cx="96" cy="45" r="1.3"/><circle cx="102" cy="45" r="1.3"/>
+    <circle cx="108" cy="45" r="1.3"/><circle cx="114" cy="45" r="1.3"/>
+    <circle cx="120" cy="45" r="1.3"/><circle cx="126" cy="45" r="1.3"/>
+    <circle cx="132" cy="45" r="1.3"/><circle cx="138" cy="45" r="1.3"/>
+    <circle cx="144" cy="45" r="1.3"/><circle cx="150" cy="45" r="1.3"/>
+    <circle cx="156" cy="45" r="1.3"/><circle cx="162" cy="45" r="1.3"/>
+    <circle cx="168" cy="45" r="1.3"/><circle cx="174" cy="45" r="1.3"/>
+    <circle cx="180" cy="45" r="1.3"/><circle cx="186" cy="45" r="1.3"/>
+  </g>
+  
+  <!-- Upper wing (swept back) -->
+  <path d="M 100 38 L 125 8 L 145 10 L 160 36 Z" fill="#D4D0C8" stroke="#BAB6AE" stroke-width="0.4"/>
+  <path d="M 108 36 L 130 14" stroke="rgba(255,255,255,0.15)" stroke-width="1.2"/>
+  
+  <!-- Lower wing -->
+  <path d="M 100 74 L 120 98 L 140 96 L 155 76 Z" fill="#CCC8C0" stroke="#BAB6AE" stroke-width="0.4"/>
+  
+  <!-- Engine pod under lower wing -->
+  <ellipse cx="118" cy="88" rx="16" ry="6" fill="#C0BCB4" stroke="#A8A49C" stroke-width="0.4"/>
+  <circle cx="102" cy="88" r="6" fill="#B4B0A8" stroke="#9C9890" stroke-width="0.4"/>
+  <circle cx="102" cy="88" r="3.5" fill="#A0A098" stroke="#888480" stroke-width="0.4"/>
+  <!-- Engine intake fan lines -->
+  <line x1="100" y1="85" x2="104" y2="91" stroke="#888480" stroke-width="0.3"/>
+  <line x1="103" y1="84.5" x2="101" y2="91.5" stroke="#888480" stroke-width="0.3"/>
+  
+  <!-- Vertical stabilizer (tail fin) -->
+  <path d="M 215 38 L 235 8 L 258 10 L 260 38 Z" fill="#DCD8D0" stroke="#C0BCB4" stroke-width="0.4"/>
+  <!-- Fin accent stripe -->
+  <path d="M 225 34 L 240 14" stroke="#6D8196" stroke-width="2.5" opacity="0.5" stroke-linecap="round"/>
+  <path d="M 228 34 L 243 14" stroke="#6D8196" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
+  
+  <!-- Horizontal stabilizer top -->
+  <path d="M 230 40 L 248 24 L 264 26 L 258 40 Z" fill="#D0CCC4" stroke="#BAB6AE" stroke-width="0.3"/>
+  <!-- Horizontal stabilizer bottom -->
+  <path d="M 230 72 L 245 82 L 260 80 L 258 72 Z" fill="#D0CCC4" stroke="#BAB6AE" stroke-width="0.3"/>
+  
+  <!-- Nose tip highlight -->
+  <path d="M 10 56 Q 12 52, 18 50" stroke="rgba(255,255,255,0.3)" stroke-width="0.8" fill="none"/>
+  
+  <!-- APU exhaust at tail tip -->
+  <circle cx="266" cy="56" r="1.5" fill="#B0ACA4"/>
+</svg>

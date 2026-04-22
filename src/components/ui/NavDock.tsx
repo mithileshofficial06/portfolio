@@ -31,9 +31,9 @@ export default function NavDock() {
   const getScale = (index: number): number => {
     if (hoveredIndex === null) return 1;
     const distance = Math.abs(index - hoveredIndex);
-    if (distance === 0) return 1.35;
-    if (distance === 1) return 1.15;
-    if (distance === 2) return 1.05;
+    if (distance === 0) return 1.5;
+    if (distance === 1) return 1.25;
+    if (distance === 2) return 1.1;
     return 1;
   };
 
@@ -70,8 +70,9 @@ export default function NavDock() {
             onMouseLeave={() => setHoveredIndex(null)}
             className="relative flex flex-col items-center gap-1 px-2 py-1 transition-transform duration-200 ease-out"
             style={{
-              transform: `scale(${scale})`,
+              transform: `scale(${scale}) translateZ(0)`,
               transformOrigin: "bottom center",
+              willChange: "transform",
             }}
             aria-label={item.label}
           >
