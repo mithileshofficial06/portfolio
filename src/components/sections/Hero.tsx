@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { gsap } from "@/lib/gsap";
 import Typed from "typed.js";
 import Image from "next/image";
-import MagneticButton from "@/components/ui/MagneticButton";
 import { ArrowUpRight, Download, Github } from "lucide-react";
 
 export default function Hero() {
