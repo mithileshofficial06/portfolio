@@ -1,18 +1,44 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { personalInfo, socialLinks } from "@/data/meta";
-import { Send, CheckCircle, Loader2, Github, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { useRef, useEffect } from "react";
+import { gsap } from "@/lib/gsap";
+import { Mail, Linkedin, Github, FileDown } from "lucide-react";
 
-type FormState = "idle" | "sending" | "success" | "error";
+const CONTACT_CARDS = [
+  {
+    label: "Email",
+    value: "mithilesh.28csb@licet.ac.in",
+    href: "mailto:mithilesh.28csb@licet.ac.in",
+    icon: Mail,
+    download: false,
+  },
+  {
+    label: "LinkedIn",
+    value: "in/mithilesh06",
+    href: "https://www.linkedin.com/in/mithilesh06/",
+    icon: Linkedin,
+    download: false,
+  },
+  {
+    label: "GitHub",
+    value: "mithileshofficial06",
+    href: "https://github.com/mithileshofficial06",
+    icon: Github,
+    download: false,
+  },
+  {
+    label: "Resume",
+    value: "Download Resume",
+    href: "/api/resume",
+    icon: FileDown,
+    download: true,
+  },
+];
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const [formState, setFormState] = useState<FormState>("idle");
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -33,7 +59,7 @@ export default function Contact() {
       );
 
       gsap.fromTo(
-        contentRef.current,
+        gridRef.current,
         { y: 50, opacity: 0 },
         {
           y: 0,
@@ -52,201 +78,109 @@ export default function Contact() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formRef.current) return;
-
-    setFormState("sending");
-
-    const formData = new FormData(formRef.current);
-    const data = {
-      name: formData.get("name") as string,
-      email: formData.get("email") as string,
-      message: formData.get("message") as string,
-    };
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        setFormState("success");
-        formRef.current.reset();
-        setTimeout(() => setFormState("idle"), 3000);
-      } else {
-        setFormState("error");
-        setTimeout(() => setFormState("idle"), 3000);
-      }
-    } catch {
-      setFormState("error");
-      setTimeout(() => setFormState("idle"), 3000);
-    }
-  };
-
-  const getIconComponent = (iconName: string) => {
-    switch (iconName) {
-      case "github": return <Github size={18} />;
-      case "linkedin": return <Linkedin size={18} />;
-      case "mail": return <Mail size={18} />;
-      default: return null;
-    }
-  };
-
   return (
-    <section ref={sectionRef} id="contact" className="py-24 relative">
-      {/* Section divider */}
+    <section ref={sectionRef} id="contact" className="relative" style={{ padding: "100px 0" }}>
+      {/* Divider */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div ref={headerRef} className="mb-16 text-center" style={{ opacity: 0 }}>
-          <p className="text-accent font-mono text-sm tracking-[0.3em] uppercase mb-2">
+      <div className="max-w-[900px] mx-auto px-6">
+        {/* ═══ Header ═══ */}
+        <div ref={headerRef} className="text-center mb-16" style={{ opacity: 0 }}>
+          <p
+            className="font-mono uppercase mb-3"
+            style={{ color: "#CCFF00", fontSize: "11px", letterSpacing: "0.15em" }}
+          >
             Let&apos;s Connect
           </p>
-          <h2 className="text-3xl md:text-5xl font-heading font-bold text-text-primary mb-4">
+          <h2
+            className="font-heading font-bold text-5xl lg:text-6xl"
+            style={{ color: "#FFFFFF", letterSpacing: "-0.01em" }}
+          >
             Get In Touch
           </h2>
-          <p className="text-text-secondary font-body max-w-lg mx-auto">
-            Have a project in mind, want to collaborate, or just say hello?
-            I&apos;d love to hear from you.
-          </p>
         </div>
 
-        <div ref={contentRef} className="grid lg:grid-cols-[1fr_1.3fr] gap-10" style={{ opacity: 0 }}>
-          {/* Left — Contact info */}
-          <div className="space-y-6">
-            <div className="space-y-4">
-              <a
-                href={`mailto:${personalInfo.email}`}
-                className="group flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300"
-              >
-                <div className="p-2.5 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
-                  <Mail size={18} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-text-secondary text-xs font-mono uppercase tracking-wider">Email</p>
-                  <p className="text-text-primary text-sm font-body">{personalInfo.email}</p>
-                </div>
-              </a>
-
-              <a
-                href={`tel:${personalInfo.phone}`}
-                className="group flex items-center gap-4 p-4 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300"
-              >
-                <div className="p-2.5 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors duration-300">
-                  <Phone size={18} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-text-secondary text-xs font-mono uppercase tracking-wider">Phone</p>
-                  <p className="text-text-primary text-sm font-body">{personalInfo.phone}</p>
-                </div>
-              </a>
-
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-card border border-border">
-                <div className="p-2.5 rounded-lg bg-accent/10">
-                  <MapPin size={18} className="text-accent" />
-                </div>
-                <div>
-                  <p className="text-text-secondary text-xs font-mono uppercase tracking-wider">Location</p>
-                  <p className="text-text-primary text-sm font-body">{personalInfo.location}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Social icons */}
-            <div className="flex gap-3">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group p-3 rounded-xl border border-border bg-card hover:border-accent hover:bg-accent/10 transition-all duration-300"
-                  aria-label={link.name}
+        {/* ═══ 2×2 Grid ═══ */}
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ opacity: 0 }}>
+          {CONTACT_CARDS.map((card) => {
+            const cardContent = (
+              <>
+                <div
+                  className="flex-shrink-0 p-3 rounded-lg transition-colors duration-300"
+                  style={{ backgroundColor: "rgba(204,255,0,0.08)" }}
                 >
-                  <span className="text-text-secondary group-hover:text-accent transition-colors duration-300">
-                    {getIconComponent(link.icon)}
-                  </span>
+                  <card.icon size={22} style={{ color: "#CCFF00" }} />
+                </div>
+                <div>
+                  <p
+                    className="font-mono uppercase text-[10px] tracking-[0.15em] mb-1"
+                    style={{ color: "#666" }}
+                  >
+                    {card.label}
+                  </p>
+                  <p
+                    className="text-sm font-body group-hover:text-[#CCFF00] transition-colors duration-300"
+                    style={{ color: "#FFFFFF" }}
+                  >
+                    {card.value}
+                  </p>
+                </div>
+              </>
+            );
+
+            const sharedClass = "group flex items-center gap-5 p-6 rounded-xl transition-all duration-300 cursor-pointer";
+            const sharedStyle = {
+              backgroundColor: "#111111",
+              border: "1px solid rgba(255,255,255,0.06)",
+            };
+            const onEnter = (e: React.MouseEvent<HTMLElement>) => {
+              e.currentTarget.style.borderColor = "rgba(204,255,0,0.4)";
+              e.currentTarget.style.transform = "scale(1.02)";
+            };
+            const onLeave = (e: React.MouseEvent<HTMLElement>) => {
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
+              e.currentTarget.style.transform = "scale(1)";
+            };
+
+            if (card.download) {
+              return (
+                <a
+                  key={card.label}
+                  href={card.href}
+                  className={sharedClass}
+                  style={sharedStyle}
+                  onMouseEnter={onEnter}
+                  onMouseLeave={onLeave}
+                >
+                  {cardContent}
                 </a>
-              ))}
-            </div>
-          </div>
+              );
+            }
 
-          {/* Right — Form */}
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
-            <div className="floating-label-group">
-              <input
-                type="text"
-                name="name"
-                id="contact-name"
-                placeholder=" "
-                required
-                autoComplete="name"
-              />
-              <label htmlFor="contact-name">Your Name</label>
-            </div>
-
-            <div className="floating-label-group">
-              <input
-                type="email"
-                name="email"
-                id="contact-email"
-                placeholder=" "
-                required
-                autoComplete="email"
-              />
-              <label htmlFor="contact-email">Your Email</label>
-            </div>
-
-            <div className="floating-label-group">
-              <textarea
-                name="message"
-                id="contact-message"
-                placeholder=" "
-                required
-                rows={5}
-                style={{ resize: "vertical" }}
-              />
-              <label htmlFor="contact-message">Your Message</label>
-            </div>
-
-            <button
-              type="submit"
-              disabled={formState === "sending"}
-              className="w-full py-4 rounded-xl font-heading font-bold text-sm tracking-wider uppercase
-                bg-accent text-bg hover:bg-accent/90 transition-all duration-300 flex items-center justify-center gap-2
-                disabled:opacity-50 disabled:cursor-not-allowed
-                hover:shadow-[0_0_24px_rgba(109,129,150,0.3)]"
-            >
-              {formState === "idle" && (
-                <>
-                  <Send size={16} />
-                  Send Message
-                </>
-              )}
-              {formState === "sending" && (
-                <>
-                  <Loader2 size={16} className="animate-spin" />
-                  Sending...
-                </>
-              )}
-              {formState === "success" && (
-                <>
-                  <CheckCircle size={16} />
-                  Message Sent!
-                </>
-              )}
-              {formState === "error" && (
-                <>
-                  <Send size={16} />
-                  Failed — Try Again
-                </>
-              )}
-            </button>
-          </form>
+            return (
+              <a
+                key={card.label}
+                href={card.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={sharedClass}
+                style={sharedStyle}
+                onMouseEnter={onEnter}
+                onMouseLeave={onLeave}
+              >
+                {cardContent}
+              </a>
+            );
+          })}
         </div>
+
+        {/* ═══ Bottom text ═══ */}
+        <p
+          className="text-center mt-12 font-mono text-xs"
+          style={{ color: "#555" }}
+        >
+          Based in Chennai, India — open to remote & on-site opportunities
+        </p>
       </div>
     </section>
   );

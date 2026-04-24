@@ -13,11 +13,12 @@ const config: Config = {
         card: "var(--color-card)",
         border: "var(--color-border)",
         accent: "var(--color-accent)",
+        "accent-glow": "var(--color-accent-glow)",
         "text-primary": "var(--color-text-primary)",
         "text-secondary": "var(--color-text-secondary)",
       },
       fontFamily: {
-        heading: ["var(--font-space-grotesk)", "sans-serif"],
+        heading: ["var(--font-bebas-neue)", "var(--font-clash-display)", "var(--font-space-grotesk)", "sans-serif"],
         body: ["var(--font-inter)", "sans-serif"],
         mono: ["var(--font-jetbrains-mono)", "monospace"],
       },
@@ -39,8 +40,8 @@ const config: Config = {
       },
       keyframes: {
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 8px rgba(109, 129, 150, 0.3)" },
-          "50%": { boxShadow: "0 0 20px rgba(109, 129, 150, 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 8px rgba(204, 255, 0, 0.3)" },
+          "50%": { boxShadow: "0 0 20px rgba(204, 255, 0, 0.6)" },
         },
       },
     },

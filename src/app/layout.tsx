@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono, Bebas_Neue, Caveat } from "next/font/google";
 import "./globals.css";
 import ScrollProgress from "@/components/ui/ScrollProgress";
 import NavDock from "@/components/ui/NavDock";
 import SmoothScroller from "@/components/layout/SmoothScroller";
+import CustomCursor from "@/components/ui/CustomCursor";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -23,6 +24,20 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-jetbrains-mono",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-bebas-neue",
+  display: "swap",
+});
+
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -101,15 +116,26 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} ${bebasNeue.variable} ${caveat.variable}`}
     >
       <head>
+        {/* Clash Display from Fontshare */}
+        <link
+          rel="stylesheet"
+          href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap"
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `:root { --font-clash-display: 'Clash Display', var(--font-space-grotesk), sans-serif; }`,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
       <body>
+        <CustomCursor />
         <SmoothScroller>
           <ScrollProgress />
           {children}

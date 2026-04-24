@@ -16,7 +16,7 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 // ─── Badge colour map ───────────────────────────────────────────────────────
 const badgeColor: Record<string, { text: string; border: string; bg: string }> = {
-  "In Dev":        { text: "#6D8196", border: "rgba(109,129,150,0.5)", bg: "rgba(109,129,150,0.1)" },
+  "In Dev":        { text: "#CCFF00", border: "rgba(204,255,0,0.5)", bg: "rgba(204,255,0,0.1)" },
   Freelance:       { text: "#C9A84C", border: "rgba(201,168,76,0.5)",  bg: "rgba(201,168,76,0.1)" },
   "Social Impact": { text: "#34d399", border: "rgba(52,211,153,0.5)",  bg: "rgba(52,211,153,0.1)" },
   Cybersecurity:   { text: "#f87171", border: "rgba(248,113,113,0.5)", bg: "rgba(248,113,113,0.1)" },
@@ -89,8 +89,9 @@ function ProjectContent({ project }: { project: Project }) {
       <h3
         className="text-[28px] font-bold mb-2"
         style={{
-          fontFamily: "var(--font-space-grotesk), sans-serif",
-          color: "#FFFFE3",
+          fontFamily: "var(--font-clash-display), var(--font-space-grotesk), sans-serif",
+          color: "#FFFFFF",
+          letterSpacing: "-0.02em",
         }}
       >
         {project.name}
@@ -99,7 +100,7 @@ function ProjectContent({ project }: { project: Project }) {
       {/* One-liner */}
       <p
         className="text-sm leading-relaxed mb-5"
-        style={{ color: "#CBCBCB" }}
+        style={{ color: "#888888" }}
       >
         {project.description.split(".")[0]}.
       </p>
@@ -110,18 +111,18 @@ function ProjectContent({ project }: { project: Project }) {
         style={{
           backgroundColor: "#141414",
           fontFamily: "var(--font-jetbrains-mono), monospace",
-          color: "#CBCBCB",
+          color: "#888888",
         }}
       >
-        <span style={{ color: "#6D8196" }}>&gt; type:</span>
+        <span style={{ color: "#CCFF00" }}>&gt; type:</span>
         {"        "}
         {project.type}
         {"\n"}
-        <span style={{ color: "#6D8196" }}>&gt; stack:</span>
+        <span style={{ color: "#CCFF00" }}>&gt; stack:</span>
         {"       "}
         {project.stack.join(" · ")}
         {"\n"}
-        <span style={{ color: "#6D8196" }}>&gt; status:</span>
+        <span style={{ color: "#CCFF00" }}>&gt; status:</span>
         {"      "}
         <span
           style={{
@@ -130,13 +131,13 @@ function ProjectContent({ project }: { project: Project }) {
                 ? "#34d399"
                 : project.status === "In Development"
                 ? "#FFBD2E"
-                : "#CBCBCB",
+                : "#888888",
           }}
         >
           {project.status}
         </span>
         {"\n"}
-        <span style={{ color: "#6D8196" }}>&gt; impact:</span>
+        <span style={{ color: "#CCFF00" }}>&gt; impact:</span>
         {"      "}
         {project.impact}
       </div>
@@ -144,7 +145,7 @@ function ProjectContent({ project }: { project: Project }) {
       {/* Full description */}
       <p
         className="text-sm mb-6"
-        style={{ color: "#CBCBCB", lineHeight: 1.7 }}
+        style={{ color: "#888888", lineHeight: 1.7 }}
       >
         {project.description}
       </p>
@@ -160,9 +161,9 @@ function ProjectContent({ project }: { project: Project }) {
             className="px-3 py-1.5 rounded-md text-xs"
             style={{
               fontFamily: "var(--font-jetbrains-mono), monospace",
-              color: "#6D8196",
-              border: "1px solid rgba(109,129,150,0.2)",
-              backgroundColor: "rgba(109,129,150,0.1)",
+              color: "#CCFF00",
+              border: "1px solid rgba(204,255,0,0.2)",
+              backgroundColor: "rgba(204,255,0,0.1)",
             }}
           >
             {tech}
@@ -179,16 +180,16 @@ function ProjectContent({ project }: { project: Project }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm transition-colors duration-200"
             style={{
-              border: "1px solid rgba(109,129,150,0.4)",
-              backgroundColor: "rgba(109,129,150,0.1)",
-              color: "#FFFFE3",
+              border: "1px solid rgba(204,255,0,0.4)",
+              backgroundColor: "rgba(204,255,0,0.1)",
+              color: "#FFFFFF",
               fontFamily: "var(--font-inter), sans-serif",
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(109,129,150,0.25)")
+              (e.currentTarget.style.backgroundColor = "rgba(204,255,0,0.25)")
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(109,129,150,0.1)")
+              (e.currentTarget.style.backgroundColor = "rgba(204,255,0,0.1)")
             }
           >
             <Github size={15} />
@@ -202,16 +203,16 @@ function ProjectContent({ project }: { project: Project }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm transition-colors duration-200"
             style={{
-              border: "1px solid rgba(109,129,150,0.55)",
-              backgroundColor: "rgba(109,129,150,0.1)",
-              color: "#FFFFE3",
+              border: "1px solid rgba(204,255,0,0.55)",
+              backgroundColor: "rgba(204,255,0,0.1)",
+              color: "#FFFFFF",
               fontFamily: "var(--font-inter), sans-serif",
             }}
             onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(109,129,150,0.25)")
+              (e.currentTarget.style.backgroundColor = "rgba(204,255,0,0.25)")
             }
             onMouseLeave={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(109,129,150,0.1)")
+              (e.currentTarget.style.backgroundColor = "rgba(204,255,0,0.1)")
             }
           >
             <ExternalLink size={15} />
@@ -296,11 +297,11 @@ function FloatingWindow({
         left: posInitialized.current ? undefined : initialLeft,
         width: "min(600px, 90vw)",
         height: "min(500px, 70vh)",
-        backgroundColor: "#1e1e1e",
+        backgroundColor: "#111111",
         border: "1px solid #3a3a3a",
         borderRadius: 10,
         boxShadow:
-          "0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(109,129,150,0.1)",
+          "0 25px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(204,255,0,0.1)",
         zIndex,
         display: "flex",
         flexDirection: "column",
@@ -312,7 +313,7 @@ function FloatingWindow({
       <div
         className="flex items-center justify-between px-4 py-2.5 select-none"
         style={{
-          backgroundColor: "#1a1a1a",
+          backgroundColor: "#0f0f0f",
           borderBottom: "1px solid #2a2a2a",
           cursor: "grab",
           touchAction: "none",
@@ -323,7 +324,7 @@ function FloatingWindow({
           className="text-xs truncate"
           style={{
             fontFamily: "var(--font-jetbrains-mono), monospace",
-            color: "#CBCBCB",
+            color: "#888888",
           }}
         >
           {project.name}
@@ -434,21 +435,22 @@ export default function Projects() {
               className="text-sm tracking-[0.3em] uppercase mb-2"
               style={{
                 fontFamily: "var(--font-jetbrains-mono), monospace",
-                color: "#6D8196",
+                color: "#CCFF00",
               }}
             >
               Portfolio
             </p>
             <h2
-              className="text-3xl md:text-5xl font-bold mb-3"
+              className="text-4xl md:text-5xl font-bold mb-3"
               style={{
-                fontFamily: "var(--font-space-grotesk), sans-serif",
-                color: "#FFFFE3",
+                fontFamily: "var(--font-clash-display), var(--font-space-grotesk), sans-serif",
+                color: "#FFFFFF",
+                letterSpacing: "-0.02em",
               }}
             >
               Featured Projects
             </h2>
-            <p className="text-sm" style={{ color: "#CBCBCB" }}>
+            <p className="text-sm" style={{ color: "#888888" }}>
               Click to explore. Pop out to compare.
             </p>
           </div>
@@ -469,7 +471,7 @@ export default function Projects() {
             <div
               className="flex items-center justify-between px-4 py-2.5"
               style={{
-                backgroundColor: "#1a1a1a",
+                backgroundColor: "#0f0f0f",
                 borderBottom: "1px solid #2a2a2a",
               }}
             >
@@ -477,7 +479,7 @@ export default function Projects() {
                 className="text-xs"
                 style={{
                   fontFamily: "var(--font-jetbrains-mono), monospace",
-                  color: "#6D8196",
+                  color: "#CCFF00",
                 }}
               >
                 ~/mithilesh/projects
@@ -492,7 +494,7 @@ export default function Projects() {
                 className="flex-shrink-0 overflow-y-auto"
                 style={{
                   width: 280,
-                  backgroundColor: "#1a1a1a",
+                  backgroundColor: "#0f0f0f",
                   borderRight: "1px solid #2a2a2a",
                 }}
               >
@@ -503,7 +505,7 @@ export default function Projects() {
                     fontFamily: "var(--font-jetbrains-mono), monospace",
                     fontSize: 10,
                     letterSpacing: "0.15em",
-                    color: "#6D8196",
+                    color: "#CCFF00",
                     textTransform: "uppercase",
                   }}
                 >
@@ -521,34 +523,36 @@ export default function Projects() {
                       style={{
                         padding: "10px 16px",
                         backgroundColor: isActive
-                          ? "rgba(109,129,150,0.15)"
+                          ? "rgba(204,255,0,0.15)"
                           : "transparent",
-                        color: isActive ? "#FFFFE3" : "#CBCBCB",
+                        color: isActive ? "#FFFFFF" : "#888888",
                         fontSize: 13,
                         fontFamily: "var(--font-inter), sans-serif",
                         borderLeft: isActive
-                          ? "2px solid #6D8196"
+                          ? "2px solid var(--color-accent)"
                           : "2px solid transparent",
                         cursor: "pointer",
+                        transition: "all 0.2s ease",
+                        transform: isActive ? "scale(1.02)" : "scale(1)",
                       }}
                       onMouseEnter={(e) => {
                         if (!isActive) {
                           e.currentTarget.style.backgroundColor =
-                            "rgba(109,129,150,0.1)";
-                          e.currentTarget.style.color = "#FFFFE3";
+                            "rgba(204,255,0,0.1)";
+                          e.currentTarget.style.color = "#FFFFFF";
                         }
                       }}
                       onMouseLeave={(e) => {
                         if (!isActive) {
                           e.currentTarget.style.backgroundColor = "transparent";
-                          e.currentTarget.style.color = "#CBCBCB";
+                          e.currentTarget.style.color = "#888888";
                         }
                       }}
                     >
                       {isActive ? (
-                        <FolderOpen size={16} style={{ color: "#6D8196", flexShrink: 0 }} />
+                        <FolderOpen size={16} style={{ color: "#CCFF00", flexShrink: 0 }} />
                       ) : (
-                        <Folder size={16} style={{ color: "#6D8196", flexShrink: 0 }} />
+                        <Folder size={16} style={{ color: "#CCFF00", flexShrink: 0 }} />
                       )}
                       <span className="truncate">{p.name}</span>
                     </button>
@@ -559,7 +563,7 @@ export default function Projects() {
               {/* RIGHT PREVIEW PANEL */}
               <div
                 className="flex-1 flex flex-col min-w-0"
-                style={{ backgroundColor: "#1e1e1e" }}
+                style={{ backgroundColor: "#111111" }}
               >
                 {/* Tab bar */}
                 {selectedProject && (
@@ -570,18 +574,18 @@ export default function Projects() {
                     <div
                       className="flex items-center gap-2 px-5 py-2"
                       style={{
-                        backgroundColor: "#232323",
-                        borderBottom: "2px solid #6D8196",
+                        backgroundColor: "#0a0a0a",
+                        borderBottom: "2px solid #CCFF00",
                         fontFamily: "var(--font-jetbrains-mono), monospace",
                         fontSize: 12,
-                        color: "#FFFFE3",
+                        color: "#FFFFFF",
                       }}
                     >
                       <span className="truncate">{selectedProject.name}</span>
                       <button
                         onClick={() => setSelectedId(null)}
                         className="ml-1 rounded p-0.5 transition-colors hover:bg-white/10"
-                        style={{ color: "#6D8196" }}
+                        style={{ color: "#CCFF00" }}
                       >
                         <X size={12} />
                       </button>
@@ -591,7 +595,7 @@ export default function Projects() {
                     <button
                       onClick={() => popOut(selectedProject.id)}
                       className="ml-auto mr-3 p-1.5 rounded transition-colors hover:bg-white/10"
-                      style={{ color: "#6D8196" }}
+                      style={{ color: "#CCFF00" }}
                       title="Pop out"
                     >
                       <Maximize2 size={14} />

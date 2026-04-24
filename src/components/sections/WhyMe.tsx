@@ -1,191 +1,261 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { Code2, Shield, Trophy, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "@/lib/gsap";
 
-const STATS = [
-  { icon: Trophy, label: "Hackathons", end: 5, suffix: "+" },
-  { icon: Code2, label: "Projects Built", end: 7, suffix: "+" },
-  { icon: Shield, label: "Certifications", end: 2, suffix: "" },
-  { icon: Users, label: "Client Projects", end: 1, suffix: "" },
+/* ─── Row Data ─── */
+const ROWS = [
+  {
+    num: "01",
+    title: "Dual Perspective: Developer & Security Thinker",
+    desc: "While most developers focus solely on building, I approach every project with both a builder's mindset and a security lens — identifying vulnerabilities before they become problems.",
+  },
+  {
+    num: "02",
+    title: "Validated Under Real Conditions",
+    desc: "My work has been tested beyond the classroom — from competitive hackathons at IIT Madras to a live demo at the U.S. Consulate, Chennai. I deliver when the stakes are real.",
+  },
+  {
+    num: "03",
+    title: "End-to-End Ownership",
+    desc: "From crafting responsive frontends to architecting backend APIs and managing databases — React, Next.js, FastAPI, PostgreSQL — I own the full stack without needing handoffs.",
+  },
+  {
+    num: "04",
+    title: "Fast Learner, Faster Shipper",
+    desc: "I picked up Snap Lens Studio, Neural.ai, and AR development from scratch — and shipped NaviLens AR to a live demo stage. New tools don't slow me down, they fuel me.",
+  },
+  {
+    num: "05",
+    title: "Collaborative by Nature",
+    desc: "Hackathons taught me to build fast with people I just met. I communicate clearly, adapt quickly, and never block a team.",
+  },
+  {
+    num: "06",
+    title: "Design-Conscious Developer",
+    desc: "I care about how things look as much as how they work. Pixel-perfect interfaces aren't a bonus — they're part of the build.",
+  },
 ];
 
-const PILLARS = [
-  {
-    title: "Build",
-    description:
-      "I build full stack applications that solve real-world problems — from AI agents to vaccination trackers.",
-    icon: Code2,
-    gradient: "from-sky-500/20 to-sky-500/5",
-  },
-  {
-    title: "Secure",
-    description:
-      "I hunt vulnerabilities with Burp Suite, Nmap, and Metasploit. Security isn't an afterthought — it's baked in.",
-    icon: Shield,
-    gradient: "from-red-500/20 to-red-500/5",
-  },
-  {
-    title: "Ship",
-    description:
-      "From hackathon prototypes to freelance client sites, I ship production-ready code that performs.",
-    icon: Trophy,
-    gradient: "from-accent/20 to-accent/5",
-  },
-];
+/* ─── Single Flip Row ─── */
+function FlipRow({ num, title, desc }: { num: string; title: string; desc: string }) {
+  const [flipped, setFlipped] = useState(false);
 
+  return (
+    <div
+      className="w-full"
+      style={{ perspective: "1200px" }}
+      onMouseEnter={() => setFlipped(true)}
+      onMouseLeave={() => setFlipped(false)}
+    >
+      {/* ── Mobile: static layout (no flip) ── */}
+      <div className="block lg:hidden" style={{ backgroundColor: "#111111", position: "relative", padding: "32px 24px 32px 100px" }}>
+        {/* Number watermark */}
+        <span
+          className="absolute pointer-events-none select-none"
+          style={{
+            fontFamily: "var(--font-bebas-neue), sans-serif",
+            fontSize: "100px",
+            color: "rgba(255,255,255,0.04)",
+            left: "16px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            lineHeight: 1,
+          }}
+        >
+          {num}
+        </span>
+        <h3
+          style={{
+            fontFamily: "var(--font-bebas-neue), sans-serif",
+            fontSize: "36px",
+            color: "#FFFFFF",
+            letterSpacing: "-0.01em",
+            lineHeight: 1.1,
+            marginBottom: "12px",
+            textTransform: "uppercase",
+          }}
+        >
+          {title}
+        </h3>
+        <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#cccccc" }}>{desc}</p>
+      </div>
+
+      {/* ── Desktop: 3D flip card ── */}
+      <div
+        className="hidden lg:block relative"
+        style={{
+          height: "140px",
+          transformStyle: "preserve-3d",
+          transition: "transform 0.5s ease",
+          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
+        }}
+      >
+        {/* ─ FRONT FACE ─ */}
+        <div
+          className="absolute inset-0 flex items-center"
+          style={{
+            backgroundColor: "#111111",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
+        >
+          {/* Number watermark */}
+          <span
+            className="absolute pointer-events-none select-none"
+            style={{
+              fontFamily: "var(--font-bebas-neue), sans-serif",
+              fontSize: "160px",
+              color: "rgba(255,255,255,0.04)",
+              left: "40px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              lineHeight: 1,
+            }}
+          >
+            {num}
+          </span>
+
+          {/* Title */}
+          <h3
+            style={{
+              fontFamily: "var(--font-bebas-neue), sans-serif",
+              fontSize: "52px",
+              color: "#FFFFFF",
+              letterSpacing: "-0.01em",
+              paddingLeft: "180px",
+              lineHeight: 1.1,
+              textTransform: "uppercase",
+            }}
+          >
+            {title}
+          </h3>
+
+          {/* Decorative vertical line */}
+          <div
+            className="absolute"
+            style={{
+              left: "50%",
+              top: "25%",
+              height: "50%",
+              width: "2px",
+              backgroundColor: "#CCFF00",
+              opacity: 0.3,
+            }}
+          />
+        </div>
+
+        {/* ─ BACK FACE ─ */}
+        <div
+          className="absolute inset-0 flex items-center"
+          style={{
+            backgroundColor: "#1a1a1a",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)",
+          }}
+        >
+          {/* Number watermark */}
+          <span
+            className="absolute pointer-events-none select-none"
+            style={{
+              fontFamily: "var(--font-bebas-neue), sans-serif",
+              fontSize: "160px",
+              color: "rgba(255,255,255,0.04)",
+              left: "40px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              lineHeight: 1,
+            }}
+          >
+            {num}
+          </span>
+
+          {/* Title reminder (left) */}
+          <div style={{ width: "40%", paddingLeft: "180px", flexShrink: 0 }}>
+            <h3
+              style={{
+                fontFamily: "var(--font-bebas-neue), sans-serif",
+                fontSize: "36px",
+                color: "#CCFF00",
+                opacity: 0.5,
+                letterSpacing: "-0.01em",
+                lineHeight: 1.1,
+                textTransform: "uppercase",
+              }}
+            >
+              {title}
+            </h3>
+          </div>
+
+          {/* Description (right) */}
+          <div style={{ width: "60%", paddingRight: "60px" }}>
+            <p style={{ fontSize: "15px", lineHeight: 1.7, color: "#cccccc" }}>{desc}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main Section ─── */
 export default function WhyMe() {
   const sectionRef = useRef<HTMLElement>(null);
-  const counterRefs = useRef<HTMLSpanElement[]>([]);
-  const pillarRefs = useRef<HTMLDivElement[]>([]);
   const headerRef = useRef<HTMLDivElement>(null);
+  const rowsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header
       gsap.fromTo(
         headerRef.current,
-        { y: 40, opacity: 0 },
+        { y: 30, opacity: 0 },
         {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none none",
-          },
+          y: 0, opacity: 1, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: sectionRef.current, start: "top 70%", toggleActions: "play none none none" },
         }
       );
 
-      // CountTo animations
-      counterRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const target = STATS[i].end;
-        const obj = { val: 0 };
-
-        gsap.to(obj, {
-          val: target,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-          onUpdate: () => {
-            el.textContent = Math.round(obj.val).toString();
-          },
-        });
-      });
-
-      // Pillar card animations
-      pillarRefs.current.forEach((card, i) => {
-        if (!card) return;
-        gsap.fromTo(
-          card,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.7,
-            delay: i * 0.15,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
-      });
+      gsap.fromTo(
+        rowsRef.current,
+        { opacity: 0 },
+        {
+          opacity: 1, duration: 0.6, ease: "power2.out",
+          scrollTrigger: { trigger: rowsRef.current, start: "top 80%", toggleActions: "play none none none" },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} id="why-me" className="py-24 relative overflow-hidden">
-      {/* Section divider */}
+    <section ref={sectionRef} id="why-me" className="relative" style={{ padding: "100px 0" }}>
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-
-      {/* Subtle grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.025] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)",
-          backgroundSize: "50px 50px",
-        }}
-      />
-
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <div ref={headerRef} className="mb-16 text-center" style={{ opacity: 0 }}>
-          <p className="text-accent font-mono text-sm tracking-[0.3em] uppercase mb-2">
-            The Numbers
+      <div className="max-w-[1100px] mx-auto px-6">
+        {/* ═══ Header ═══ */}
+        <div ref={headerRef} className="text-center mb-14" style={{ opacity: 0 }}>
+          <p
+            className="font-mono uppercase mb-3"
+            style={{ color: "#CCFF00", fontSize: "11px", letterSpacing: "0.15em" }}
+          >
+            Why Me
           </p>
-          <h2 className="text-3xl md:text-5xl font-heading font-bold text-text-primary mb-4">
-            Why Work With Me
+          <h2
+            className="font-heading font-bold text-5xl lg:text-6xl"
+            style={{ color: "#FFFFFF", letterSpacing: "-0.01em" }}
+          >
+            Why Choose Me
           </h2>
-          <p className="text-text-secondary font-body max-w-lg mx-auto">
-            Results speak louder than words. Here&apos;s what I&apos;ve accomplished so far.
-          </p>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-          {STATS.map((stat, i) => (
-            <div
-              key={stat.label}
-              className="text-center p-6 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300 group"
-            >
-              <div className="p-3 rounded-xl bg-accent/10 w-fit mx-auto mb-4 group-hover:bg-accent/20 transition-colors duration-300">
-                <stat.icon size={24} className="text-accent" />
-              </div>
-              <div className="text-3xl md:text-4xl font-heading font-bold text-text-primary mb-1">
-                <span
-                  ref={(el) => {
-                    if (el) counterRefs.current[i] = el;
-                  }}
-                >
-                  0
-                </span>
-                <span className="text-accent">{stat.suffix}</span>
-              </div>
-              <p className="text-text-secondary font-body text-sm">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Pillars */}
-        <div className="grid md:grid-cols-3 gap-5">
-          {PILLARS.map((pillar, i) => (
-            <div
-              key={pillar.title}
-              ref={(el) => {
-                if (el) pillarRefs.current[i] = el;
-              }}
-              className="group relative p-8 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-500 overflow-hidden"
-              style={{ opacity: 0 }}
-            >
-              {/* Background gradient */}
-              <div
-                className={`absolute inset-0 bg-gradient-to-b ${pillar.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-              />
-
-              <div className="relative z-10">
-                <div className="p-3 rounded-xl bg-accent/10 w-fit mb-5 group-hover:bg-accent/20 transition-colors duration-300">
-                  <pillar.icon size={22} className="text-accent" />
-                </div>
-                <h3 className="text-xl font-heading font-bold text-text-primary mb-3 group-hover:text-accent transition-colors duration-300">
-                  {pillar.title}
-                </h3>
-                <p className="text-text-secondary font-body text-sm leading-relaxed">
-                  {pillar.description}
-                </p>
-              </div>
+        {/* ═══ Flip Rows ═══ */}
+        <div ref={rowsRef} className="flex flex-col gap-3" style={{ opacity: 0 }}>
+          {ROWS.map((row, i) => (
+            <div key={i}>
+              <FlipRow num={row.num} title={row.title} desc={row.desc} />
+              {i < ROWS.length - 1 && (
+                <div style={{ height: "1px", backgroundColor: "rgba(255,255,255,0.06)" }} />
+              )}
             </div>
           ))}
         </div>

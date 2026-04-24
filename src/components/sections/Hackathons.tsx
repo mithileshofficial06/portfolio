@@ -1,184 +1,311 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-import { hackathons } from "@/data/hackathons";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState, useCallback } from "react";
+import { gsap } from "@/lib/gsap";
 import { Trophy, MapPin, Calendar, Zap } from "lucide-react";
+
+/* ─── Hackathon data ─── */
+const HACKATHONS = [
+  {
+    id: 1,
+    name: "Ctrl+Alt+Hack",
+    organizer: "LICET EICON",
+    year: "2024",
+    achievement: "10th Place",
+    project: "VaxiTrack",
+    accentColor: "#CCFF00",
+    accentRgb: "204,255,0",
+  },
+  {
+    id: 2,
+    name: "BitWorks Hackathon",
+    organizer: "LICET",
+    year: "2024",
+    achievement: "Top 5 of 20 Teams",
+    project: null,
+    accentColor: "#38bdf8",
+    accentRgb: "56,189,248",
+  },
+  {
+    id: 3,
+    name: "Hackathon TN 2025",
+    organizer: "NCSR @ IIT Madras",
+    year: "2025",
+    achievement: "Participated & Presented",
+    project: "AI Security Scanner",
+    accentColor: "#a78bfa",
+    accentRgb: "167,139,250",
+  },
+  {
+    id: 4,
+    name: "Technathon 2025",
+    organizer: "MAD Club, LICET",
+    year: "2025",
+    achievement: "Finalist",
+    project: null,
+    accentColor: "#f87171",
+    accentRgb: "248,113,113",
+  },
+  {
+    id: 5,
+    name: "Freedom 250 TRUST Teams",
+    organizer: "U.S. Consulate × Snap × TheNeural.ai",
+    year: "2025",
+    achievement: "Demo Day @ US Consulate",
+    project: "NaviLens AR",
+    accentColor: "#34d399",
+    accentRgb: "52,211,153",
+  },
+];
+
+const AUTO_INTERVAL = 3000;
 
 export default function Hackathons() {
   const sectionRef = useRef<HTMLElement>(null);
-  const cardsRef = useRef<HTMLDivElement[]>([]);
-  const dotsRef = useRef<HTMLDivElement[]>([]);
   const headerRef = useRef<HTMLDivElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progressTweenRef = useRef<gsap.core.Tween | null>(null);
+  const isPausedRef = useRef(false);
+  const touchStartRef = useRef<number>(0);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const total = HACKATHONS.length;
+
+  const goTo = useCallback(
+    (index: number) => setActiveIndex(((index % total) + total) % total),
+    [total]
+  );
+  const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo]);
+  const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo]);
+
+  /* ─── Progress bar ─── */
+  const startProgress = useCallback(() => {
+    if (progressTweenRef.current) progressTweenRef.current.kill();
+    if (progressRef.current) {
+      gsap.set(progressRef.current, { scaleX: 0 });
+      progressTweenRef.current = gsap.to(progressRef.current, {
+        scaleX: 1,
+        duration: AUTO_INTERVAL / 1000,
+        ease: "none",
+        transformOrigin: "left center",
+      });
+    }
+  }, []);
+
+  /* ─── Auto-advance ─── */
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    startProgress();
+    timerRef.current = setInterval(() => {
+      if (!isPausedRef.current) setActiveIndex((p) => (p + 1) % total);
+    }, AUTO_INTERVAL);
+  }, [total, startProgress]);
 
   useEffect(() => {
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (progressTweenRef.current) progressTweenRef.current.kill();
+    };
+  }, [activeIndex, resetTimer]);
+
+  const handleMouseEnter = () => {
+    isPausedRef.current = true;
+    if (progressTweenRef.current) progressTweenRef.current.pause();
+  };
+  const handleMouseLeave = () => {
+    isPausedRef.current = false;
+    if (progressTweenRef.current) progressTweenRef.current.resume();
+  };
+
+  /* ─── Touch swipe ─── */
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const diff = touchStartRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? goNext() : goPrev();
+  };
+
+  /* ─── GSAP entrance ─── */
+  useEffect(() => {
     const ctx = gsap.context(() => {
-      // Header animation
-      gsap.fromTo(
-        headerRef.current,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 70%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-
-      // Card animations
-      cardsRef.current.forEach((card, i) => {
-        if (!card) return;
-        const isLeft = i % 2 === 0;
-
-        gsap.fromTo(
-          card,
-          { x: isLeft ? -50 : 50, opacity: 0, scale: 0.95 },
-          {
-            x: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 82%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+      gsap.fromTo(headerRef.current, { y: 40, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.8, ease: "power3.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 70%", toggleActions: "play none none none" },
       });
-
-      // Dot fill animations
-      dotsRef.current.forEach((dot) => {
-        if (!dot) return;
-        gsap.fromTo(
-          dot,
-          { scale: 0 },
-          {
-            scale: 1,
-            duration: 0.5,
-            ease: "elastic.out(1, 0.4)",
-            scrollTrigger: {
-              trigger: dot,
-              start: "top 78%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+      gsap.fromTo(deckRef.current, { y: 60, opacity: 0 }, {
+        y: 0, opacity: 1, duration: 0.9, delay: 0.15, ease: "power3.out",
+        scrollTrigger: { trigger: sectionRef.current, start: "top 65%", toggleActions: "play none none none" },
       });
     }, sectionRef);
-
     return () => ctx.revert();
   }, []);
 
-  return (
-    <section ref={sectionRef} id="hackathons" className="py-24 relative">
-      {/* Section divider */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+  /* ─── Card position (Vertical Cover Flow) ─── */
+  const getCardStyle = (index: number): React.CSSProperties => {
+    const diff = index - activeIndex;
+    const adj = diff > total / 2 ? diff - total : diff < -total / 2 ? diff + total : diff;
 
-      <div className="max-w-5xl mx-auto px-6">
-        <div ref={headerRef} className="mb-16 text-center" style={{ opacity: 0 }}>
-          <p className="text-accent font-mono text-sm tracking-[0.3em] uppercase mb-2">
+    if (adj === 0)
+      return { transform: "translateY(0) scale(1)", opacity: 1, zIndex: 30, pointerEvents: "auto", filter: "brightness(1)" };
+    if (adj === -1)
+      return { transform: "translateY(-65%) scale(0.85)", opacity: 0.5, zIndex: 20, pointerEvents: "auto", filter: "brightness(0.5)", cursor: "pointer" };
+    if (adj === 1)
+      return { transform: "translateY(65%) scale(0.85)", opacity: 0.5, zIndex: 20, pointerEvents: "auto", filter: "brightness(0.5)", cursor: "pointer" };
+    if (adj === -2)
+      return { transform: "translateY(-110%) scale(0.7)", opacity: 0, zIndex: 10, pointerEvents: "none" };
+    if (adj === 2)
+      return { transform: "translateY(110%) scale(0.7)", opacity: 0, zIndex: 10, pointerEvents: "none" };
+    return { transform: "translateY(0) scale(0.5)", opacity: 0, zIndex: 0, pointerEvents: "none" };
+  };
+
+  const activeHack = HACKATHONS[activeIndex];
+
+  return (
+    <section
+      ref={sectionRef}
+      id="hackathons"
+      className="relative overflow-hidden"
+      style={{ background: "#0a0a0a", padding: "100px 0 80px" }}
+    >
+      {/* Divider */}
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(204,255,0,0.15) 30%, rgba(204,255,0,0.15) 70%, transparent)" }} />
+
+      {/* Dot grid */}
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.4, backgroundImage: "radial-gradient(rgba(204,255,0,0.06) 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10 flex flex-col md:flex-row items-center gap-12">
+        {/* ═══ Left: Header ═══ */}
+        <div ref={headerRef} className="md:w-1/3 text-center md:text-left" style={{ opacity: 0 }}>
+          <p className="font-mono text-sm tracking-[0.3em] uppercase mb-3" style={{ color: "#CCFF00" }}>
             Competitions
           </p>
-          <h2 className="text-3xl md:text-5xl font-heading font-bold text-text-primary mb-4">
-            Hackathon Journey
+          <h2 className="font-heading font-bold text-4xl md:text-5xl mb-4" style={{ color: "#FFFFFF", letterSpacing: "-0.02em" }}>
+            Hackathon<br />Journey
           </h2>
-          <p className="text-text-secondary font-body max-w-lg mx-auto">
+          <p className="font-body" style={{ color: "rgba(255,255,255,0.55)" }}>
             From campus hackathons to international demos — my competitive coding journey.
           </p>
+
+          {/* Progress bar */}
+          <div className="mt-8 mb-4 w-full md:max-w-[200px]">
+            <div className="h-[2px] rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+              <div
+                ref={progressRef}
+                className="h-full rounded-full"
+                style={{ background: activeHack.accentColor, transformOrigin: "left center", transform: "scaleX(0)" }}
+              />
+            </div>
+          </div>
+
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center md:justify-start gap-3">
+            {HACKATHONS.map((hack, i) => (
+              <button
+                key={hack.id}
+                onClick={(e) => { e.stopPropagation(); goTo(i); }}
+                className="p-1"
+                aria-label={`Go to ${hack.name}`}
+              >
+                <div
+                  className="rounded-full transition-all duration-300"
+                  style={{
+                    width: i === activeIndex ? "24px" : "8px",
+                    height: "8px",
+                    background: i === activeIndex ? hack.accentColor : "rgba(255,255,255,0.15)",
+                    boxShadow: i === activeIndex ? `0 0 10px rgba(${hack.accentRgb}, 0.5)` : "none",
+                    borderRadius: "999px",
+                  }}
+                />
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Timeline */}
-        <div className="relative">
-          {/* Central line — gradient glow */}
+        {/* ═══ Right: Vertical Carousel ═══ */}
+        <div
+          ref={deckRef}
+          className="md:w-2/3 relative w-full"
+          style={{ opacity: 0 }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
+          {/* Card container */}
           <div
-            className="absolute left-6 md:left-1/2 md:-translate-x-[1px] top-0 h-full w-[2px] hidden md:block"
-            style={{
-              background: "linear-gradient(to bottom, transparent, var(--color-accent), var(--color-accent), transparent)",
-              boxShadow: "0 0 8px rgba(109, 129, 150, 0.3)",
-            }}
-          />
-          <div
-            className="absolute left-6 top-0 h-full w-[2px] md:hidden"
-            style={{
-              background: "linear-gradient(to bottom, transparent, var(--color-accent), var(--color-accent), transparent)",
-            }}
-          />
-
-          <div className="space-y-10">
-            {hackathons.map((hack, index) => {
-              const isLeft = index % 2 === 0;
+            className="relative mx-auto cursor-pointer flex items-center justify-center"
+            style={{ height: "600px", maxWidth: "600px" }}
+            onClick={goNext}
+          >
+            {HACKATHONS.map((hack, index) => {
+              const style = getCardStyle(index);
+              const isActive = index === activeIndex;
 
               return (
                 <div
                   key={hack.id}
-                  className={cn(
-                    "relative flex items-center",
-                    isLeft ? "md:flex-row" : "md:flex-row-reverse"
-                  )}
+                  className="absolute w-full max-w-[500px] transition-all duration-[600ms] ease-[cubic-bezier(0.25,0.8,0.25,1)]"
+                  style={{
+                    ...style,
+                  }}
                 >
-                  {/* Timeline dot */}
                   <div
-                    ref={(el) => {
-                      if (el) dotsRef.current[index] = el;
-                    }}
-                    className="absolute left-6 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full z-10 border-2 border-accent"
+                    className="relative rounded-2xl overflow-hidden"
                     style={{
-                      transform: "scale(0)",
-                      backgroundColor: "var(--color-accent)",
-                      boxShadow: "0 0 10px rgba(109, 129, 150, 0.5)",
+                      background: "#111111",
+                      border: isActive
+                        ? `1px solid rgba(${hack.accentRgb}, 0.3)`
+                        : "1px solid rgba(255,255,255,0.08)",
+                      boxShadow: isActive
+                        ? `0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(${hack.accentRgb}, 0.06)`
+                        : "0 8px 24px rgba(0,0,0,0.4)",
                     }}
-                  />
-
-                  {/* Card */}
-                  <div
-                    ref={(el) => {
-                      if (el) cardsRef.current[index] = el;
-                    }}
-                    className={cn(
-                      "ml-14 md:ml-0 md:w-[44%] p-5 rounded-xl bg-card border border-border hover:border-accent/40 transition-all duration-300 group",
-                      isLeft ? "md:mr-auto" : "md:ml-auto"
-                    )}
-                    style={{ opacity: 0 }}
                   >
-                    {/* Year + Hackathon name */}
-                    <div className="flex items-center gap-2 mb-1">
-                      <Calendar size={13} className="text-accent" />
-                      <span className="text-accent font-mono text-xs font-medium">
+                    {/* Top accent bar */}
+                    <div className="h-1" style={{ background: `linear-gradient(90deg, transparent, ${hack.accentColor}, transparent)` }} />
+
+                    {/* BG gradient */}
+                    <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(ellipse at 70% 20%, rgba(${hack.accentRgb}, 0.06) 0%, transparent 60%)` }} />
+
+                    <div className="relative p-7 md:p-8">
+                      {/* Year badge */}
+                      <div
+                        className="absolute top-5 right-5 font-mono text-xs tracking-wider px-3 py-1.5 rounded-full"
+                        style={{ background: `rgba(${hack.accentRgb}, 0.12)`, border: `1px solid rgba(${hack.accentRgb}, 0.25)`, color: hack.accentColor }}
+                      >
+                        <Calendar size={11} className="inline mr-1.5 -mt-0.5" />
                         {hack.year}
-                      </span>
-                    </div>
+                      </div>
 
-                    <h3 className="text-lg font-heading font-bold text-text-primary mb-1 group-hover:text-accent transition-colors duration-300">
-                      {hack.name}
-                    </h3>
+                      {/* Hackathon name */}
+                      <h3 className="font-heading font-bold text-2xl md:text-[28px] mb-2 pr-24" style={{ color: "#FFFFFF", letterSpacing: "-0.02em" }}>
+                        {hack.name}
+                      </h3>
 
-                    <p className="text-text-secondary font-body text-sm flex items-center gap-1.5 mb-3">
-                      <MapPin size={12} className="flex-shrink-0" />
-                      {hack.organizer}
-                    </p>
-
-                    {/* Achievement badge */}
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/30 group-hover:border-accent/60 transition-colors duration-300">
-                      <Trophy size={13} className="text-accent" />
-                      <span className="text-xs font-mono text-accent font-medium">
-                        {hack.achievement}
-                      </span>
-                    </div>
-
-                    {hack.project && (
-                      <p className="text-text-secondary font-body text-xs mt-3 flex items-center gap-1.5">
-                        <Zap size={11} className="text-accent" />
-                        Project: <span className="text-text-primary font-medium">{hack.project}</span>
+                      {/* Organizer */}
+                      <p className="flex items-center gap-2 font-body text-sm mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>
+                        <MapPin size={13} className="flex-shrink-0" />
+                        {hack.organizer}
                       </p>
-                    )}
+
+                      {/* Achievement */}
+                      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl mb-3" style={{ background: `rgba(${hack.accentRgb}, 0.1)`, border: `1px solid rgba(${hack.accentRgb}, 0.25)` }}>
+                        <Trophy size={15} style={{ color: hack.accentColor }} />
+                        <span className="font-mono text-sm font-medium" style={{ color: hack.accentColor }}>{hack.achievement}</span>
+                      </div>
+
+                      {/* Project */}
+                      {hack.project && (
+                        <p className="flex items-center gap-2 font-body text-sm mt-2" style={{ color: "rgba(255,255,255,0.4)" }}>
+                          <Zap size={13} style={{ color: hack.accentColor }} className="flex-shrink-0" />
+                          Project: <span className="font-medium text-white/70">{hack.project}</span>
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
