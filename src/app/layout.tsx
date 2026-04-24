@@ -42,6 +42,7 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://mithileshoff.vercel.app/'),
   title: "Mithilesh KS — Full Stack Developer | Cybersecurity | AI",
   description:
     "Portfolio of Mithilesh KS — Aspiring Full Stack Developer, Cybersecurity Enthusiast, and AI Builder based in Chennai, India. B.E. CSE student at LICET.",

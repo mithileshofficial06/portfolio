@@ -16,12 +16,12 @@ import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 // ─── Badge colour map ───────────────────────────────────────────────────────
 const badgeColor: Record<string, { text: string; border: string; bg: string }> = {
-  "In Dev":        { text: "#CCFF00", border: "rgba(204,255,0,0.5)", bg: "rgba(204,255,0,0.1)" },
-  Freelance:       { text: "#C9A84C", border: "rgba(201,168,76,0.5)",  bg: "rgba(201,168,76,0.1)" },
-  "Social Impact": { text: "#34d399", border: "rgba(52,211,153,0.5)",  bg: "rgba(52,211,153,0.1)" },
-  Cybersecurity:   { text: "#f87171", border: "rgba(248,113,113,0.5)", bg: "rgba(248,113,113,0.1)" },
-  ML:              { text: "#a78bfa", border: "rgba(167,139,250,0.5)", bg: "rgba(167,139,250,0.1)" },
-  "Full Stack":    { text: "#38bdf8", border: "rgba(56,189,248,0.5)",  bg: "rgba(56,189,248,0.1)" },
+  "In Dev": { text: "#CCFF00", border: "rgba(204,255,0,0.5)", bg: "rgba(204,255,0,0.1)" },
+  Freelance: { text: "#C9A84C", border: "rgba(201,168,76,0.5)", bg: "rgba(201,168,76,0.1)" },
+  "Social Impact": { text: "#34d399", border: "rgba(52,211,153,0.5)", bg: "rgba(52,211,153,0.1)" },
+  Cybersecurity: { text: "#f87171", border: "rgba(248,113,113,0.5)", bg: "rgba(248,113,113,0.1)" },
+  ML: { text: "#a78bfa", border: "rgba(167,139,250,0.5)", bg: "rgba(167,139,250,0.1)" },
+  "Full Stack": { text: "#38bdf8", border: "rgba(56,189,248,0.5)", bg: "rgba(56,189,248,0.1)" },
 };
 
 // ─── Traffic lights ─────────────────────────────────────────────────────────
@@ -130,8 +130,8 @@ function ProjectContent({ project }: { project: Project }) {
               project.status === "Live"
                 ? "#34d399"
                 : project.status === "In Development"
-                ? "#FFBD2E"
-                : "#888888",
+                  ? "#FFBD2E"
+                  : "#888888",
           }}
         >
           {project.status}
@@ -642,7 +642,7 @@ export default function Projects() {
 
       {/* ── Floating windows portal ── */}
       <AnimatePresence>
-      {floatingWindows.map((id, i) => {
+        {floatingWindows.map((id, i) => {
           const p = projects.find((pr) => pr.id === id);
           if (!p) return null;
           return (
