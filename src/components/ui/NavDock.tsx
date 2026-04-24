@@ -30,7 +30,7 @@ const RANGE = 140;
 
 export default function NavDock() {
   const activeSection = useActiveSection();
-  const dockRef = useRef<HTMLNavElement>(null);
+  const dockRef = useRef<HTMLElement>(null);
   const itemsRef = useRef<HTMLButtonElement[]>([]);
   const tooltipsRef = useRef<HTMLSpanElement[]>([]);
   const iconsRef = useRef<SVGSVGElement[]>([]);
