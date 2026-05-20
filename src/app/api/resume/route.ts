@@ -4,7 +4,7 @@ import { join } from "path";
 
 export async function GET() {
   try {
-    const filePath = join(process.cwd(), "public", "Resume.pdf");
+    const filePath = join(process.cwd(), "public", "resume.pdf");
     
     // Check if file exists
     if (!existsSync(filePath)) {
