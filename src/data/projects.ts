@@ -1,0 +1,95 @@
+import { Project } from "@/types";
+
+export const projects: Project[] = [
+  {
+    id: 1,
+    name: "NaviLens AR",
+    badge: "In Dev",
+    description:
+      "AR city discovery experience with vernacular AI narration and offline-first architecture. Built for the Freedom 250 TRUST Teams Innovation Challenge — U.S. Consulate Chennai.",
+    stack: ["Snap Lens Studio", "Neural.ai"],
+    type: "AR / AI Project",
+    status: "In Development",
+    impact: "Helps tourists discover cultural POIs without internet",
+    github: "https://github.com/mithileshofficial06",
+    live: null,
+  },
+  {
+    id: 2,
+    name: "EduGenie",
+    badge: "Full Stack",
+    description:
+      "AI academic agent that scrapes Moodle every 2 hours, generates mock exams from lecture PDFs using Gemini + Mistral, and delivers WhatsApp alerts via Twilio before deadlines.",
+    stack: ["React", "Node.js", "Python", "Flask", "MongoDB", "Twilio", "Gemini"],
+    type: "Full Stack / AI Agent",
+    status: "Completed",
+    impact: "Automates academic tracking for college students",
+    github: "https://github.com/mithileshofficial06",
+    live: null,
+  },
+  {
+    id: 3,
+    name: "VaxiTrack",
+    badge: "Social Impact",
+    description:
+      "Full-stack child vaccination tracking platform with AI-powered voice and SMS reminders for parents. Helps healthcare workers and administrators track immunization schedules across India.",
+    stack: ["TypeScript", "Full Stack"],
+    type: "Social Impact / Healthcare",
+    status: "Completed",
+    impact: "Improves child immunization rates across India",
+    github: "https://github.com/mithileshofficial06/VaxiTrack",
+    live: null,
+  },
+  {
+    id: 4,
+    name: "Interface Elevation",
+    badge: "Freelance",
+    description:
+      "Premium client website for Interface Elevation & Signs, a 27-year-old signage company. Features SVG stroke animations, welding spark click effects, magnetic CTAs, and slot machine counters.",
+    stack: ["Next.js", "GSAP", "ScrollTrigger", "Google Sheets"],
+    type: "Freelance / Frontend",
+    status: "Live",
+    impact: "Digitised brand presence for an established B2B company",
+    github: null,
+    live: "https://lnkd.in/gZBHgAnt",
+  },
+  {
+    id: 5,
+    name: "KalyanaKonnection",
+    badge: "Social Impact",
+    description:
+      "Role-based food surplus redistribution platform connecting event food providers with NGOs for fast, verified, and transparent pickup of excess food.",
+    stack: ["HTML", "Full Stack"],
+    type: "Social Impact / Platform",
+    status: "Completed",
+    impact: "Reduces food waste by connecting surplus to NGOs",
+    github: "https://github.com/mithileshofficial06/KalyanaKonnection",
+    live: null,
+  },
+  {
+    id: 6,
+    name: "AI Security Scanner",
+    badge: "Cybersecurity",
+    description:
+      "Web vulnerability scanner that uses Google Gemini API for intelligent vulnerability interpretation. Detects XSS, redirect flaws, and generates downloadable PDF reports with AI-driven fix suggestions.",
+    stack: ["Python", "Gemini API"],
+    type: "Cybersecurity / AI Tool",
+    status: "Completed",
+    impact: "Automates vulnerability detection for web developers",
+    github: "https://github.com/mithileshofficial06/AI_Automated_Security_scanner",
+    live: null,
+  },
+  {
+    id: 7,
+    name: "CNN Breed Classifier",
+    badge: "ML",
+    description:
+      "Machine learning project that recognises animal breeds from images using a Convolutional Neural Network. Trained and tested on a custom dataset with high accuracy.",
+    stack: ["Python", "Deep Learning"],
+    type: "Machine Learning",
+    status: "Completed",
+    impact: "Demonstrates applied deep learning for image classification",
+    github: "https://github.com/mithileshofficial06/CNN_Breed_Classifier",
+    live: null,
+  },
+];
